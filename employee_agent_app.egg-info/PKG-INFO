@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: employee-agent-app
+Version: 0.1.0
+Summary: Workday-like employee management app with a LangGraph-based LLM agent
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi
+Requires-Dist: uvicorn
+Requires-Dist: sqlalchemy
+Requires-Dist: pydantic
+Requires-Dist: langgraph
+Requires-Dist: openai
+Provides-Extra: dev
+Requires-Dist: black; extra == "dev"
+Requires-Dist: ruff; extra == "dev"
+Requires-Dist: pytest; extra == "dev"

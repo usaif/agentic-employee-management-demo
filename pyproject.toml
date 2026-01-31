@@ -1,0 +1,35 @@
+[project]
+name = "employee-agent-app"
+version = "0.1.0"
+description = "Workday-like employee management app with a LangGraph-based LLM agent"
+readme = "README.md"
+requires-python = ">=3.10"
+
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "sqlalchemy",
+    "pydantic",
+    "langgraph",
+    "openai",
+    "python-dotenv",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "ruff",
+    "pytest",
+]
+
+[tool.uv]
+# uv will manage the virtual environment and installs
+
+[tool.setuptools]
+packages = ["app"]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.0.2",
+]

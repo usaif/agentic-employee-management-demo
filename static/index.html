@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Employee Agent Demo</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 800px;
+      margin: 20px auto;
+    }
+    #chat {
+      border: 1px solid #ccc;
+      padding: 10px;
+      height: 400px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+    .user { color: blue; }
+    .agent { color: green; }
+    input { width: 80%; padding: 8px; }
+    button { padding: 8px; }
+  </style>
+</head>
+<body>
+
+<h2>Employee Agent Chat</h2>
+
+<div id="chat"></div>
+
+<input id="message" placeholder="Type a message..." />
+<button onclick="sendMessage()">Send</button>
+
+<script>
+let sessionId = null;
+
+const chatDiv = document.getElementById("chat");
+
+function addMessage(sender, text) {
+  const p = document.createElement("p");
+  p.className = sender;
+  p.textContent = `${sender}: ${text}`;
+  chatDiv.appendChild(p);
+  chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+async function createSession() {
+  const res = await fetch("http://localhost:8000/agent/session", {
+    method: "POST"
+  });
+  const data = await res.json();
+  sessionId = data.session_id;
+  addMessage("agent", "Session created. Please authenticate.");
+}
+
+async function sendMessage() {
+  const input = document.getElementById("message");
+  const text = input.value;
+  if (!text) return;
+
+  addMessage("user", text);
+  input.value = "";
+
+  const res = await fetch(
+    `http://localhost:8000/agent/chat/${sessionId}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    }
+  );
+
+  const data = await res.json();
+  addMessage("agent", data.message);
+}
+
+createSession();
+</script>
+
+</body>
+</html>

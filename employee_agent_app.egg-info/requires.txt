@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+sqlalchemy
+pydantic
+langgraph
+openai
+
+[dev]
+black
+ruff
+pytest
