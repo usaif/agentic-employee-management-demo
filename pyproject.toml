@@ -11,8 +11,10 @@ dependencies = [
     "sqlalchemy",
     "pydantic",
     "langgraph",
-    "openai",
     "python-dotenv",
+    "bedrock-agentcore-starter-toolkit>=0.2.8",
+    "boto3>=1.42.39",
+    # REMOVE: "openai>=1.0.0"  # No longer needed!
 ]
 
 [project.optional-dependencies]

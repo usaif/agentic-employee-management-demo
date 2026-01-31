@@ -1,11 +1,50 @@
-cat <<EOF > .gitignore
+# Python
 __pycache__/
-*.pyc
-.env
-.pytest_cache/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# SQLite database
 *.db
-.env.*
-.DS_Store
-.idea/
+*.sqlite
+*.sqlite3
+data/
+
+# IDE
 .vscode/
-EOF
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Terraform
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/*.tfplan
+terraform/*.tfvars
+terraform/crash.log
+terraform/.terraform.tfstate.lock.info
+
+# AgentCore
+.bedrock_agentcore/
+.bedrock_agentcore.yaml
+
+# Docker
+.dockerignore
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+*.log

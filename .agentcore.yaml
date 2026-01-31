@@ -1,0 +1,18 @@
+name: employee-data-mgmt-agent
+region: us-east-1
+
+deployment:
+  type: container
+  container:
+    image_uri: 632040940966.dkr.ecr.us-east-1.amazonaws.com/employee-data-mgmt-agent:v1
+    platform: linux/arm64
+    port: 8080
+
+execution_role_arn: arn:aws:iam::632040940966:role/employee-data-mgmt-agent-execution-role
+
+environment:
+  AWS_REGION: us-east-1
+  LOG_LEVEL: INFO
+
+observability:
+  cloudwatch_logs: true
