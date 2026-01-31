@@ -5,10 +5,8 @@ built using FastAPI and LangGraph.
 It is designed to demonstrate how agent-based systems can bypass traditional
 authorization controls even when RBAC is implemented correctly.
 
-This is not a production application.
+This is NOT a production application.
 It is a security research and demonstration project.
-
----
 
 ## Purpose
 
@@ -22,8 +20,6 @@ The goal of this project is to:
   - prior tool-call confusion (confused deputy)
   - HITL misuse and TOCTOU-style flaws
 - Use tests as executable security documentation
-
----
 
 ## High-Level Architecture
 
@@ -41,7 +37,6 @@ LangGraph Agent
 Key design choice:
 Authorization is enforced on selected_api, not on natural-language intent.
 
----
 
 ## Identity and Onboarding Model
 
@@ -59,21 +54,19 @@ Authorization is enforced on selected_api, not on natural-language intent.
 - HR users can update roles later
 - Employees and managers cannot self-escalate roles
 
----
-
 ## Authorization Model (RBAC)
 
 Authorization is enforced only after an action is selected.
 
 Role permissions:
 
-Employee:
+**Employee**:
 - View own profile only
 
-Manager:
+**Manager**:
 - Read-only access
 
-HR:
+**HR**:
 - View, update, and delete other employees
 
 All roles:
@@ -82,7 +75,6 @@ All roles:
 This enforcement is correct by design.
 Bypasses occur because the agent controls the inputs to authorization.
 
----
 
 ## Test Philosophy
 
@@ -110,34 +102,28 @@ They are divided into three categories:
 Some tests are expected to fail.
 These failures are intentional and documented.
 
----
-
 ## Running the Application
 
 Start the API locally:
 
-uv run python app/main.py
+`uv run python app/main.py`
 
 The API will be available at:
 http://localhost:8000
-
----
 
 ## Running Tests
 
 Run all tests:
 
-uv run pytest -v
+`uv run pytest -v`
 
 Run only onboarding tests:
 
-uv run pytest tests/test_onboarding_flow.py -v
+`uv run pytest tests/test_onboarding_flow.py -v`
 
 Discover tests without executing:
 
-uv run pytest --collect-only
-
----
+`uv run pytest --collect-only`
 
 ## Security Disclaimer
 
@@ -149,8 +135,6 @@ It includes:
 - mutable role and state handling
 
 Do not use this code in production.
-
----
 
 ## Intended Audience
 
@@ -164,15 +148,11 @@ This project assumes familiarity with:
 - API security
 - LLM-based agent architectures
 
----
-
 ## License
 
 This project is licensed under the MIT License.
 
 You are free to use, modify, and reference this code with attribution.
-
----
 
 ## Author Notes
 
