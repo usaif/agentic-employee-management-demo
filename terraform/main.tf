@@ -51,6 +51,12 @@ resource "aws_iam_role" "bedrock_agent_execution" {
   }
 }
 
+# IAM Policy: Bedrock Full Access (ADDED)
+resource "aws_iam_role_policy_attachment" "bedrock_full_access" {
+  role       = aws_iam_role.bedrock_agent_execution.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonBedrockFullAccess"
+}
+
 # IAM Policy: Bedrock Model Access (Claude)
 resource "aws_iam_role_policy" "bedrock_model_access" {
   name = "bedrock-model-access"
@@ -86,9 +92,11 @@ resource "aws_iam_role_policy" "cloudwatch_logs" {
         Action = [
           "logs:CreateLogGroup",
           "logs:CreateLogStream",
-          "logs:PutLogEvents"
+          "logs:PutLogEvents",
+          "logs:DescribeLogGroups",
+          "logs:DescribeLogStreams"
         ]
-        Resource = "arn:aws:logs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/bedrock-agentcore/*"
+        Resource = "arn:aws:logs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:*"
       }
     ]
   })

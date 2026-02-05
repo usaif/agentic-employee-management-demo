@@ -3,10 +3,52 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 from app.database import Base, engine, SessionLocal
+from unittest.mock import patch, MagicMock
 from app.models.employee import Employee
 
 client = TestClient(app)
 
+@pytest.fixture(autouse=True)
+def mock_classify_intent():
+    def smart_classifier(user_input: str) -> dict:
+        """Return appropriate intent based on keywords in user input"""
+        msg = user_input.lower()
+        
+        # Login/Authentication intent
+        if "login" in msg or "authenticate" in msg:
+            return {"intent": "authenticate"}  # ✅ Changed from "login"
+        
+        # View intents
+        if "show" in msg or "view" in msg or "display" in msg:
+            if "my profile" in msg or "my information" in msg:
+                return {"intent": "view_self"}  # ✅ Matches decision.py
+            elif "employee" in msg:
+                return {"intent": "view_employee"}  # ✅ Matches decision.py
+            else:
+                return {"intent": "view_self"}
+        
+        # Update intent
+        if "update" in msg or "change" in msg or "modify" in msg:
+            return {"intent": "update_employee"}  # ✅ Matches decision.py
+        
+        # Delete intent
+        if "delete" in msg or "remove" in msg:
+            return {"intent": "delete_employee"}  # ✅ Matches decision.py
+        
+        # Onboard intent
+        if "onboard" in msg:
+            return {"intent": "onboard"}  # ✅ Matches decision.py
+        
+        # Confirmation (for HITL)
+        if msg.strip() in ["yes", "y", "confirm"]:
+            return {"intent": "confirm"}
+        
+        # Default
+        return {"intent": "unknown"}
+    
+    with patch('app.agent.nodes.intent.classify_intent') as mock:
+        mock.side_effect = smart_classifier
+        yield mock
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_database():

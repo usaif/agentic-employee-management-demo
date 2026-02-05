@@ -23,6 +23,17 @@ def decide_action(state: AgentState) -> AgentState:
         state.session_id,
         {"intent": intent, "input": state.user_input},
     )
+    
+    # Handle blocked requests
+    if intent == "blocked":
+        state.selected_api = None
+        state.response = "Your request was blocked due to policy violations."
+        log_event(
+            "decision_blocked",
+            state.session_id,
+            {"reason": "guardrail_intervention"},
+        )
+        return state
 
     # ------------------------------------------------------------
     # AUTHENTICATION

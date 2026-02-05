@@ -205,7 +205,7 @@ def execute_action(state: AgentState):
                 return state
 
             # Fields that are allowed to be updated
-            ALLOWED_FIELDS = {"location", "status", "salary", "name"}
+            ALLOWED_FIELDS = {"location", "status", "salary", "name", "role"}
 
             updated_fields = {}
 

@@ -6,8 +6,6 @@ from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
 import uvicorn
 from sqlalchemy.orm import Session
-
-# Import SessionLocal - THIS WAS MISSING!
 from app.database import get_db, init_db, SessionLocal
 from app.agent.graph import agent_graph
 from app.agent.state import AgentState
@@ -25,7 +23,7 @@ async def startup_event():
     try:
         # Create all tables
         init_db()
-        print("✅ Database initialized successfully")
+        print("Database initialized successfully")
         
         # Seed test employees
         db = SessionLocal()
@@ -35,7 +33,7 @@ async def startup_event():
             db.close()
         
     except Exception as e:
-        print(f"❌ Database initialization error: {e}")
+        print(f"Database initialization error: {e}")
         traceback.print_exc()
 
 class InvocationRequest(BaseModel):
@@ -78,7 +76,8 @@ async def invocations(request: InvocationRequest, db: Session = Depends(get_db))
         
         elif action == "chat":
             session_id = payload.get("session_id")
-            user_message = payload.get("prompt", "")
+            user_message = payload.get("prompt", "") or payload.get("message", "")
+
             
             if not session_id:
                 raise HTTPException(status_code=400, detail="session_id required")
@@ -158,7 +157,9 @@ async def invocations(request: InvocationRequest, db: Session = Depends(get_db))
             return InvocationResponse(output={
                 "session_id": session_id,
                 "message": result_state.response,
-                "response": result_state.response
+                "response": result_state.response,
+                "debug_intent": result_state.intent,  # Shows classified intent
+                "debug_authenticated": result_state.authenticated
             })
         
         else:
@@ -170,7 +171,7 @@ async def invocations(request: InvocationRequest, db: Session = Depends(get_db))
             "status_code": he.status_code
         })
     except Exception as e:
-        print(f"❌ ERROR: {type(e).__name__}: {str(e)}")
+        print(f"ERROR: {type(e).__name__}: {str(e)}")
         print(traceback.format_exc())
         
         return InvocationResponse(output={
