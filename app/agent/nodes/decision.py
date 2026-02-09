@@ -23,7 +23,7 @@ def decide_action(state: AgentState) -> AgentState:
         state.session_id,
         {"intent": intent, "input": state.user_input},
     )
-    
+
     # Handle blocked requests
     if intent == "blocked":
         state.selected_api = None

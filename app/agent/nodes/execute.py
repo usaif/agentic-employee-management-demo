@@ -120,7 +120,7 @@ def execute_action(state: AgentState):
                 emp = Employee(
                     name=name,
                     email=email,
-                    role="employee",   # enforced
+                    role="employee",  # enforced
                     manager_id=None,
                     salary=0,
                     status="active",
@@ -148,7 +148,6 @@ def execute_action(state: AgentState):
                 state.response = "Onboarding failed due to a system error."
                 return state
 
-        
         # --------------------------------------------------------
         # VIEW OWN PROFILE
         # --------------------------------------------------------
@@ -196,9 +195,11 @@ def execute_action(state: AgentState):
                 state.response = "Could not determine which employee to update."
                 return state
 
-            emp = db.query(Employee).filter(
-                Employee.id == state.api_args["employee_id"]
-            ).first()
+            emp = (
+                db.query(Employee)
+                .filter(Employee.id == state.api_args["employee_id"])
+                .first()
+            )
 
             if not emp:
                 state.response = "Employee not found."
@@ -241,7 +242,6 @@ def execute_action(state: AgentState):
         # DELETE EMPLOYEE (MANDATORY HITL)
         # --------------------------------------------------------
         if state.selected_api == "delete_employee":
-
             # 1️⃣ Mandatory HITL gate (ABSOLUTE)
             if not state.hitl_confirmed:
                 state.response = (

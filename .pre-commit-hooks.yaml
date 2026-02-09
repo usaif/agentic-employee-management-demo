@@ -1,0 +1,44 @@
+# Hook definition for when this repo is used as a pre-commit hook repo
+# This allows other projects to use this hook via:
+# - repo: <url-to-this-repo>
+#   hooks:
+#     - id: check-write-capabilities
+#     - id: check-authorization-changes
+
+- id: check-write-capabilities
+  name: Check for new write capabilities without tests
+  description: |
+    Detects new database mutations, API endpoints, and agent actions
+    that modify data, and verifies corresponding tests exist.
+  entry: hooks/scripts/check_write_capabilities.py
+  language: python
+  types: [python]
+  pass_filenames: true
+  require_serial: true
+  additional_dependencies: []
+
+- id: check-authorization-changes
+  name: Check for authorization logic changes without test updates
+  description: |
+    Uses AST parsing to detect changes to RBAC and permission logic,
+    then verifies that authorization tests are updated accordingly.
+    More reliable than regex-based approaches.
+  entry: hooks/scripts/check_authorization_changes.py
+  language: python
+  types: [python]
+  pass_filenames: true
+  require_serial: true
+  additional_dependencies: []
+
+- id: check-security-deletions
+  name: Check for removal of security-relevant code
+  description: |
+    Uses AST parsing and git diff analysis to detect when security
+    controls are deleted (auth checks, audit logging, input validation).
+    Prevents accidental security regressions.
+  entry: hooks/scripts/check_security_deletions.py
+  language: python
+  types: [python]
+  pass_filenames: true
+  require_serial: true
+  additional_dependencies: []

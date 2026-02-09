@@ -24,6 +24,7 @@ data/
 *.swp
 *.swo
 .DS_Store
+.claude/
 
 # Terraform
 terraform/.terraform/
