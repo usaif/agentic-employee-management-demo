@@ -1,0 +1,87 @@
+# Pre-commit hooks configuration
+# Install: pre-commit install
+# Run manually: pre-commit run --all-files
+
+repos:
+  # Local hooks (custom to this project)
+  - repo: local
+    hooks:
+      # Custom hook: Detect new write capabilities without tests
+      - id: check-write-capabilities
+        name: Check Write Capabilities
+        entry: python hooks/scripts/check_write_capabilities.py
+        language: system
+        types: [python]
+        pass_filenames: true
+        stages: [pre-commit]
+        verbose: true
+
+      # Custom hook: Detect authorization logic changes without test updates (AST-based)
+      - id: check-authorization-changes
+        name: Check Authorization Changes
+        entry: python hooks/scripts/check_authorization_changes.py
+        language: system
+        types: [python]
+        pass_filenames: true
+        stages: [pre-commit]
+        verbose: true
+
+      # Custom hook: Detect removal of security-relevant code (AST-based)
+      - id: check-security-deletions
+        name: Check Security Code Deletions
+        entry: python hooks/scripts/check_security_deletions.py
+        language: system
+        types: [python]
+        pass_filenames: true
+        stages: [pre-commit]
+        verbose: true
+
+  # Standard pre-commit hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      # Basic file checks
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: [--maxkb=1000]
+      - id: check-merge-conflict
+      - id: detect-private-key
+
+      # Python-specific checks
+      - id: check-ast
+      - id: check-docstring-first
+      - id: debug-statements
+
+  # Python code formatting
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        language_version: python3.12
+        args: [--line-length=100]
+
+  # Python linting
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.4
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+
+# Configuration for the write capability checker
+# (can be customized per project)
+files: ^(app/|tests/).*\.py$
+exclude: |
+  (?x)(
+    ^\.venv/|
+    ^venv/|
+    ^\.pytest_cache/|
+    ^__pycache__/|
+    ^\.git/|
+    ^data/|
+    ^migrations/
+  )
